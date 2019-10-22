@@ -8,53 +8,30 @@ public class BaseMovement : MovementComponent
 	//
 	// Public members.
 	//
-	//! Height of the jump.
-	public float jumpHeight = 4.0f;
-	//! Time till jump apex.
-	public float jumpApexTime = 0.4f;
 	//! Speed of charecter walking.
 	public float walkSpeed = 5.0f;
-
-	//
-	// Private members.
-	//
 	//! Gravity acceleration.
-	float gravity;
-	//! Velocity for jump.
-	float jumpVelocity;
+	public float gravity = 10;
 	//! Current velocity.
-	Vector2 velocity;	
+	[HideInInspector]
+	public Vector2 velocity;
 
-    // Start is called before the first frame update
-    public void Start()
+	// Start is called before the first frame update
+	protected override void Start()
     {
 		base.Start();
-		ResetGravityParams();
-	}
-
-	//! Resets all gravity parameters.
-	void ResetGravityParams()
-	{
-		gravity = -2 * jumpHeight / (jumpApexTime * jumpApexTime);
-		jumpVelocity = -gravity * jumpApexTime;
 	}
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
 	{
-		ResetGravityParams();
+		velocity.x = Input.GetAxis("A_H") * walkSpeed;
+		velocity.y += gravity * Time.deltaTime;
+
+		controller.Move(velocity * Time.deltaTime);
 
 		if ((controller.GetCollisionState() & (Controller2D.CollisionState.COLLIDE_BELOW | Controller2D.CollisionState.COLLIDE_ABOVE)) != 0) {
 			velocity.y = 0.0f;
 		}
-
-		if ((controller.GetCollisionState() & Controller2D.CollisionState.COLLIDE_BELOW) != 0 && Input.GetButtonDown("B_J")) {
-			velocity.y = jumpVelocity;
-		}
-
-		velocity.x = Input.GetAxis("A_H") * walkSpeed;
-		velocity.y += gravity * Time.fixedDeltaTime;
-
-		controller.Move(velocity * Time.fixedDeltaTime);		
-    }
+	}
 }

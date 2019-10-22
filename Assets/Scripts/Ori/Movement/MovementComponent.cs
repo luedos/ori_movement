@@ -25,7 +25,7 @@ public class MovementComponent : MonoBehaviour
 	}
 
 	// Start is called before the first frame update
-	public void Start()
+	protected virtual void Start()
     {
 		controller = GetComponent<Controller2D>();
 	}

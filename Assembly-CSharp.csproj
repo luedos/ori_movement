@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Ori\Controller2D.cs" />
     <Compile Include="Assets\Scripts\Ori\Movement\BaseMovement.cs" />
+    <Compile Include="Assets\Scripts\Ori\Movement\Jump.cs" />
     <Compile Include="Assets\Scripts\Ori\Movement\MovementComponent.cs" />
     <Compile Include="Assets\Scripts\PlatformController.cs" />
     <Reference Include="Unity.Timeline.Editor">
