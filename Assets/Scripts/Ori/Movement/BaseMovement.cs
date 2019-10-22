@@ -16,6 +16,8 @@ public class BaseMovement : MovementComponent
 	public float accelerationTimeAirborne = .2f;
 	//! Grounded acceleration.
 	public float accelerationTimeGrounded = .1f;
+	//! Max speed from gravitational force when charecter sliding from wall.
+	public float maxSlidingSpeed = 3.0f;
 	//! Current velocity.
 	[HideInInspector]
 	public Vector2 velocity;
@@ -47,8 +49,19 @@ public class BaseMovement : MovementComponent
 
 		controller.Move(velocity * Time.deltaTime);
 
-		if ((controller.GetCollisionState() & (Controller2D.CollisionState.COLLIDE_BELOW | Controller2D.CollisionState.COLLIDE_ABOVE)) != 0) {
+		Controller2D.CollisionState state = controller.GetCollisionState();
+
+		if ((state & (Controller2D.CollisionState.COLLIDE_BELOW | Controller2D.CollisionState.COLLIDE_ABOVE)) != 0) {
 			velocity.y = 0.0f;
 		}
+
+		if ((state & Controller2D.CollisionState.COLLIDE_BELOW) == 0
+			&& (state & (Controller2D.CollisionState.COLLIDE_LEFT | Controller2D.CollisionState.COLLIDE_RIGHT)) != 0)
+		{
+			if (velocity.y < maxSlidingSpeed) {
+				velocity.y = -maxSlidingSpeed;
+			}
+		}
+
 	}
 }

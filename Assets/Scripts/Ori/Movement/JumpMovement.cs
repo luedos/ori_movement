@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(BaseMovement))]
-[RequireComponent(typeof(Controller2D))]
 public class JumpMovement : MovementComponent
 {
 	//
@@ -24,13 +23,14 @@ public class JumpMovement : MovementComponent
 	//! Velocity for jump.
 	float jumpVelocity;
 	//! Jumps count.
-	uint jumps = 0;
+	[HideInInspector]
+	public uint jumps = 0;
 	
 	//
 	// Public interface.
 	//
 	//! Makes jump.
-	void Jump(float xVelocity = 0.0f)
+	public void Jump(float xVelocity = 0.0f)
 	{
 		baseMovement.velocity.y = jumpVelocity;
 		baseMovement.velocity.x += xVelocity;

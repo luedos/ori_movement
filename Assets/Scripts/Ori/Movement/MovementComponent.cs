@@ -32,8 +32,11 @@ public class MovementComponent : MonoBehaviour
 
 	private void OnDestroy()
 	{
-		for (int i = 0; i < children.Count; ++i) {
-			Destroy(children[i]);
+		for (int i = 0; i < children.Count; ++i) 
+		{
+			if (children[i] != null) {
+				Destroy(children[i]);
+			}
 		}
 	}
 }
