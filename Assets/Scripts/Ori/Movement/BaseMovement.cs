@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Controller2D))]
-public class BaseMovement : MonoBehaviour
+public class BaseMovement : MovementComponent
 {
 	//
 	// Public members.
@@ -22,16 +22,13 @@ public class BaseMovement : MonoBehaviour
 	float gravity;
 	//! Velocity for jump.
 	float jumpVelocity;
-	//! Controller.
-	Controller2D controller;
 	//! Current velocity.
 	Vector2 velocity;	
 
     // Start is called before the first frame update
-    void Start()
+    public void Start()
     {
-		controller = GetComponent<Controller2D>();
-
+		base.Start();
 		ResetGravityParams();
 	}
 
