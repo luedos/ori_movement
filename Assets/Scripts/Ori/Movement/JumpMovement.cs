@@ -4,7 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(BaseMovement))]
 [RequireComponent(typeof(Controller2D))]
-public class Jump : MovementComponent
+public class JumpMovement : MovementComponent
 {
 	//
 	// Public members.
@@ -30,9 +30,10 @@ public class Jump : MovementComponent
 	// Public interface.
 	//
 	//! Makes jump.
-	void MakeJump()
+	void Jump(float xVelocity = 0.0f)
 	{
 		baseMovement.velocity.y = jumpVelocity;
+		baseMovement.velocity.x += xVelocity;
 	}
 
 	//
@@ -63,7 +64,7 @@ public class Jump : MovementComponent
 		if (jumps > 0 && Input.GetButtonDown("B_J"))
 		{
 			--jumps;
-			MakeJump();
+			Jump();
 		}
 	}
 }

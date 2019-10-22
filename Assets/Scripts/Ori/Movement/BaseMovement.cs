@@ -12,9 +12,19 @@ public class BaseMovement : MovementComponent
 	public float walkSpeed = 5.0f;
 	//! Gravity acceleration.
 	public float gravity = 10;
+	//! Air control acceleration.
+	public float accelerationTimeAirborne = .2f;
+	//! Grounded acceleration.
+	public float accelerationTimeGrounded = .1f;
 	//! Current velocity.
 	[HideInInspector]
 	public Vector2 velocity;
+
+	//
+	// Private members.
+	//
+	//! Just for dumping velocity.
+	float velocityXSmoothing;
 
 	// Start is called before the first frame update
 	protected override void Start()
@@ -25,7 +35,14 @@ public class BaseMovement : MovementComponent
     // Update is called once per frame
     void Update()
 	{
-		velocity.x = Input.GetAxis("A_H") * walkSpeed;
+		velocity.x =Mathf.SmoothDamp(
+			velocity.x, 
+			Input.GetAxis("A_H") * walkSpeed, 
+			ref velocityXSmoothing,
+			(controller.GetCollisionState() & Controller2D.CollisionState.COLLIDE_BELOW) != 0 
+				? accelerationTimeGrounded
+				: accelerationTimeAirborne);
+
 		velocity.y += gravity * Time.deltaTime;
 
 		controller.Move(velocity * Time.deltaTime);
