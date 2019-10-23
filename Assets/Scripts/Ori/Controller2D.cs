@@ -32,7 +32,7 @@ public class Controller2D : MonoBehaviour
 	//! Origins for collision checking.
 	RaycastOrigins relOrigins;
 	//! Collider.
-	BoxCollider2D collider;
+	BoxCollider2D boxCollider;
 	//! Vertical spacing of of raytraicing.
 	float verRaySpacing;
 	//! Horizontal spacing of of raytraicing.
@@ -40,7 +40,7 @@ public class Controller2D : MonoBehaviour
 	//! Depth into box collision for raycasting.
 	float skinWidth = 0.015f;
 	//! Number of vertical raycasts.
-	uint verRayNum = 8;
+	uint verRayNum = 16;
 	//! Number of horizontal raycasts.
 	uint horRayNum = 16;
 	//! Data about collision after last move.
@@ -67,44 +67,38 @@ public class Controller2D : MonoBehaviour
 	public float maxDecendAngle = 75f;
 	//! Max velosity calculation step.
 	public float maxVelocityStep = 0.10f;
-	//! Depth into box collision for raycasting.
-	float SkinWidth
+	//! Sets depth into box collision for raycasting.
+	public void SetSkinWidth(float value)
 	{
-		set
-		{
-			skinWidth = value;
-			UpdateRaycastData();
-		}
-		get
-		{
-			return skinWidth;
-		}
+		skinWidth = value;
+		UpdateRaycastData();
 	}
-	//! Number of vertical raycasts.
-	uint VerRayNum
+	//! Returns depth into box collision for raycasting.
+	public float GetSkinWidth()
 	{
-		set
-		{
-			verRayNum = value;
-			UpdateRaycastData();
-		}
-		get
-		{
-			return verRayNum;
-		}
+		return skinWidth;
 	}
-	//! Number of horizontal raycasts.
-	uint HorRayNum
+	//! Sets number of vertical raycasts.
+	public void SetVerRayNumber(uint number)
 	{
-		set
-		{
-			horRayNum = value;
-			UpdateRaycastData();
-		}
-		get
-		{
-			return horRayNum;
-		}
+		verRayNum = number;
+		UpdateRaycastData();
+	}
+	//! Returns number of vertical raycasts.
+	public uint GetVerRayNumber()
+	{
+		return verRayNum;
+	}
+	//! Sets number of horizontal raycasts.
+	public void SetHorRayNumber(uint number)
+	{
+		horRayNum = number;
+		UpdateRaycastData();
+	}
+	//! Returns number of horizontal raycasts.
+	public uint GetHorRayNumber()
+	{
+		return horRayNum;
 	}
 
 	//
@@ -113,7 +107,7 @@ public class Controller2D : MonoBehaviour
 	//! Updates every data related to collision testing.
 	void UpdateRaycastData()
 	{
-		Bounds bounds = collider.bounds;
+		Bounds bounds = boxCollider.bounds;
 		bounds.Expand(-2 * skinWidth);
 
 		relOrigins.bottomLeft = new Vector2(-bounds.extents.x, -bounds.extents.y);
@@ -308,12 +302,12 @@ public class Controller2D : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
 	{
-		collider = GetComponent<BoxCollider2D>();
+		boxCollider = GetComponent<BoxCollider2D>();
 		UpdateRaycastData();
 	}
 	//! Moves character in sertain diraction.
 	public void Move(Vector2 velocity)
-	{
+	{ 
 		collisions.Reset();
 		Vector3 startPos = transform.position;
 		Vector3 stepPos = startPos;
