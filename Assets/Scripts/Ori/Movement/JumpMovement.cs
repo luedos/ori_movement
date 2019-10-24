@@ -16,6 +16,10 @@ public class JumpMovement : MovementComponent
 	public float highJumpHeight = 6.0f;
 	//! Possible number of jumps.
 	public uint jumpsNumber = 1;
+	//! Swiches off or on wall jumps;
+	public bool wallJump = true;
+	//! Wall jump x velocity.
+	public float wallJumpVelocity = 10;
 
 	//
 	// Private members.
@@ -25,27 +29,33 @@ public class JumpMovement : MovementComponent
 	//! Velocity for jump.
 	float jumpVelocity;
 	//! Jumps counter.
-	[HideInInspector]
-	public uint jumps = 0;
+	uint jumpsCounter = 0;
 	//! Low jump gravity.
 	float lowJumpGravity;
 	//! High jump gravity.
 	float highJumpGravity;
-	//! Time till jump apex.
-	float highJumpApexTime;
 	//! Is player currently jumping.
 	bool jumping = false;
 
 	//
 	// Public interface.
 	//
+	public bool IsJumping()
+	{
+		return jumping;
+	}
 	//! Makes jump.
 	public void Jump(float xVelocity = 0.0f)
 	{
+		if (jumpsCounter == 0) {
+			return;
+		}
 		jumping = true;
 		baseMovement.gravity = highJumpGravity;
 		baseMovement.velocity.y = jumpVelocity;
 		baseMovement.velocity.x += xVelocity;
+
+		--jumpsCounter;
 	}
 
 	//
@@ -56,8 +66,7 @@ public class JumpMovement : MovementComponent
 	{
 		lowJumpGravity = -2 * lowJumpHeight / (lowJumpApexTime * lowJumpApexTime);
 		jumpVelocity = -lowJumpGravity * lowJumpApexTime;
-		highJumpApexTime = 2 * highJumpHeight / jumpVelocity;
-		highJumpGravity = -jumpVelocity / highJumpApexTime;
+		highJumpGravity = -0.5f * (jumpVelocity * jumpVelocity) / highJumpHeight;
 
 		baseMovement.gravity = lowJumpGravity;
 	}
@@ -74,28 +83,36 @@ public class JumpMovement : MovementComponent
     {
 		Controller2D.CollisionState state = controller.GetCollisionState();
 
+		bool grounded = (state & Controller2D.CollisionState.COLLIDE_BELOW) != 0;
+		bool wallGrounded = wallJump && (state & (Controller2D.CollisionState.COLLIDE_LEFT | Controller2D.CollisionState.COLLIDE_RIGHT)) != 0;
+
 		if (jumping)
 		{
-			if (state != 0)
+			if (grounded || baseMovement.velocity.y <= 0)
 			{
 				jumping = false;
 			}
 
-			if (!jumping || baseMovement.velocity.y < 0 || !Input.GetButton("B_J"))
+			if (!jumping || !Input.GetButton("B_J"))
 			{
 				baseMovement.gravity = lowJumpGravity;
 			}
 		}
 
-		if ((state & Controller2D.CollisionState.COLLIDE_BELOW) != 0)
+		if (grounded || wallGrounded)
 		{
-			jumps = jumpsNumber;
+			jumpsCounter = jumpsNumber;
 		}
 
-		if (jumps > 0 && Input.GetButtonDown("B_J"))
+		if (jumpsCounter > 0 && Input.GetButtonDown("B_J"))
 		{
-			--jumps;
-			Jump();
+			float xVelocity = 0;
+
+			if (wallGrounded) {
+				xVelocity = (state & Controller2D.CollisionState.COLLIDE_LEFT) != 0 ? wallJumpVelocity : -wallJumpVelocity;
+			}
+
+			Jump(xVelocity);
 		}
 	}
 }
