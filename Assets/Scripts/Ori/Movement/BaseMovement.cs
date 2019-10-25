@@ -37,7 +37,7 @@ public class BaseMovement : MovementComponent
     // Update is called once per frame
     void Update()
 	{
-		velocity.x =Mathf.SmoothDamp(
+		velocity.x = Mathf.SmoothDamp(
 			velocity.x, 
 			Input.GetAxis("A_H") * walkSpeed, 
 			ref velocityXSmoothing,
@@ -51,17 +51,16 @@ public class BaseMovement : MovementComponent
 
 		Controller2D.CollisionState state = controller.GetCollisionState();
 
+		bool grounded = (state & Controller2D.CollisionState.COLLIDE_BELOW) != 0;
+
 		if ((state & (Controller2D.CollisionState.COLLIDE_BELOW | Controller2D.CollisionState.COLLIDE_ABOVE)) != 0) {
 			velocity.y = 0.0f;
 		}
-
-		if ((state & Controller2D.CollisionState.COLLIDE_BELOW) == 0
-			&& (state & (Controller2D.CollisionState.COLLIDE_LEFT | Controller2D.CollisionState.COLLIDE_RIGHT)) != 0)
+		
+		if ((state & (Controller2D.CollisionState.COLLIDE_LEFT | Controller2D.CollisionState.COLLIDE_RIGHT)) != 0
+			&& velocity.y < -maxSlidingSpeed)
 		{
-			if (velocity.y < maxSlidingSpeed) {
-				velocity.y = -maxSlidingSpeed;
-			}
+			velocity.y = -maxSlidingSpeed;
 		}
-
 	}
 }
