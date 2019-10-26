@@ -93,6 +93,7 @@ GameObject:
   - component: {fileID: 1030594980}
   - component: {fileID: 1030594981}
   - component: {fileID: 611320599}
+  - component: {fileID: 2886649934852768447}
   m_Layer: 8
   m_Name: Ori
   m_TagString: Untagged
@@ -153,10 +154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 882613f8c84d83642a7be0794a76a766, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 7
   gravity: -10
-  accelerationTimeAirborne: 0.1
-  accelerationTimeGrounded: 0.04
   maxSlidingSpeed: 3
   velocity: {x: 0, y: 0}
 --- !u!114 &1030594981
@@ -195,3 +193,18 @@ MonoBehaviour:
   jumpsNumber: 3
   wallJump: 1
   wallJumpVelocity: 20
+--- !u!114 &2886649934852768447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6094405792392704423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 438128ef86bfa804cbaca83606a4efd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  walkSpeed: 6
+  accelerationTimeAirborne: 0.1
+  accelerationTimeGrounded: 0.05
