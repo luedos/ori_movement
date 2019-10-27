@@ -45,15 +45,17 @@ public class JumpMovement : MovementComponent
 		return jumping;
 	}
 	//! Makes jump.
-	public void Jump(float xVelocity = 0.0f)
+	public void Jump(Vector2 velocity, bool resetX = false)
 	{
 		if (jumpsCounter == 0) {
 			return;
 		}
 		jumping = true;
 		baseMovement.gravity = highJumpGravity;
-		baseMovement.velocity.y = jumpVelocity;
-		baseMovement.velocity.x += xVelocity;
+		baseMovement.velocity.y = velocity.y;
+		if (resetX) {
+			baseMovement.velocity.x = velocity.x;
+		}
 
 		--jumpsCounter;
 	}
@@ -106,13 +108,16 @@ public class JumpMovement : MovementComponent
 
 		if (jumpsCounter > 0 && Input.GetButtonDown("B_J"))
 		{
-			float xVelocity = 0;
+			Vector2 velocity = new Vector2(0, jumpVelocity);
+			bool xReseting = false;
 
-			if (wallGrounded) {
-				xVelocity = (state & Controller2D.CollisionState.COLLIDE_LEFT) != 0 ? wallJumpVelocity : -wallJumpVelocity;
+			if (wallGrounded && !grounded) 
+			{
+				velocity.x = (state & Controller2D.CollisionState.COLLIDE_LEFT) != 0 ? wallJumpVelocity : -wallJumpVelocity;
+				xReseting = true;
 			}
 
-			Jump(xVelocity);
+			Jump(velocity, xReseting);
 		}
 	}
 }
